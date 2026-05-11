@@ -1,0 +1,546 @@
+/* ============================================================
+   TypmN Landing Page — Premium Styles
+   ============================================================ */
+
+/* HEADER */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1rem 0;
+  transition: background 0.3s ease, padding 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+.headerScrolled {
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom-color: var(--border-subtle);
+  padding: 0.75rem 0;
+}
+.headerInner { display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+.logoIcon { font-size: 1.75rem; }
+.logoText { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; color: var(--text-primary); }
+.nav { display: flex; gap: 2rem; }
+.navLink { color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; transition: color var(--transition-fast); }
+.navLink:hover { color: var(--text-primary); }
+.headerActions { display: flex; align-items: center; gap: 0.75rem; }
+.mobileToggle { display: none; background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; padding: 0.25rem; }
+.mobileMenu { display: none; position: fixed; top: var(--header-height); left: 0; right: 0; background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px); padding: 1.5rem; border-bottom: 1px solid var(--border-subtle); z-index: 99; animation: slide-up 0.3s ease-out; }
+.mobileMenu a { display: block; padding: 0.75rem 0; color: var(--text-secondary); font-size: 1.0625rem; font-weight: 500; border-bottom: 1px solid var(--border-subtle); }
+.mobileMenu a:last-child { border-bottom: none; }
+.mobileMenuOpen { display: block; }
+
+/* HERO */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: var(--header-height);
+}
+.heroGlow {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.06) 40%, transparent 70%);
+  pointer-events: none;
+}
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
+.heroContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 1.5rem;
+  animation: slide-up 0.8s ease-out;
+}
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  border-radius: var(--radius-full);
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent-indigo);
+  margin-bottom: 1.5rem;
+}
+.heroBadgeDot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+  animation: pulse-glow 2s infinite;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+.heroTitle {
+  font-size: clamp(2.75rem, 7vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 1.25rem;
+}
+.heroGradient {
+  background: linear-gradient(135deg, #818cf8 0%, #a78bfa 30%, #c084fc 60%, #818cf8 100%);
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.heroDesc {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+.heroCTA {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+.heroBtn { font-size: 1.0625rem; padding: 1rem 2.25rem; }
+.heroBtnSec { font-size: 1.0625rem; padding: 1rem 2.25rem; }
+
+/* Typing Demo */
+.typingDemo {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 2vw, 1.375rem);
+  color: var(--accent-indigo);
+  padding: 1rem 2rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
+  display: inline-block;
+  margin-bottom: 2rem;
+}
+.typingText { color: var(--accent-violet); }
+.cursor {
+  color: var(--accent-indigo);
+  animation: typing-cursor 1s step-end infinite;
+  font-weight: 300;
+}
+
+/* Live Stats */
+.liveStats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.statItem { text-align: center; }
+.statNum { display: block; font-size: 1.75rem; font-weight: 800; color: var(--text-primary); font-family: var(--font-mono); }
+.statLabel { font-size: 0.8125rem; color: var(--text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+.statDivider { width: 1px; height: 40px; background: var(--border-default); }
+
+/* Floating Keys */
+.floatingKeys { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.floatingKey {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.08;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ============================================================
+   SECTION COMMON
+   ============================================================ */
+.section { padding: 6rem 0; position: relative; }
+.sectionHeader { text-align: center; margin-bottom: 3.5rem; }
+.sectionBadge {
+  display: inline-block;
+  padding: 0.3rem 0.875rem;
+  border-radius: var(--radius-full);
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent-indigo);
+  margin-bottom: 1rem;
+}
+.sectionTitle {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+.sectionDesc {
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
+  max-width: 550px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* BENEFITS */
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+.benefitCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  transition: all var(--transition-base);
+  animation: slide-up 0.6s ease-out backwards;
+}
+.benefitCard:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glow);
+}
+.benefitIcon { font-size: 2.25rem; margin-bottom: 1rem; }
+.benefitTitle { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem; }
+.benefitDesc { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* TOURNAMENTS */
+.tournamentSection {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.tournamentGrid {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 1.5rem;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: thin; /* Firefox */
+}
+.tournamentGrid::-webkit-scrollbar {
+  height: 8px;
+}
+.tournamentGrid::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+}
+.tournamentGrid::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4);
+  border-radius: var(--radius-full);
+}
+.tournamentGrid::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6);
+}
+.tournamentCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  min-width: 350px;
+  max-width: 400px;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+.tournamentCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+
+.liveBadgeContainer { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; padding: 0.75rem; background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.2); border-radius: var(--radius-md); color: var(--accent-rose); font-weight: 700; font-size: 0.9375rem; text-transform: uppercase; letter-spacing: 0.05em; animation: pulse-border 2s infinite; }
+.liveIndicator { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-rose); animation: blink 1s infinite; box-shadow: 0 0 8px var(--accent-rose); }
+.startingSoonBadge { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: var(--radius-md); color: var(--accent-amber); font-weight: 600; font-size: 0.9375rem; }
+
+.tournamentCard:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glow);
+}
+.tournamentBadge {
+  display: inline-block;
+  padding: 0.2rem 0.625rem;
+  border-radius: var(--radius-full);
+  background: rgba(99, 102, 241, 0.12);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--accent-indigo);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tournamentName { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+
+/* Countdown */
+.countdown { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+.countdownUnit {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  min-width: 48px;
+}
+.countdownNum { display: block; font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-indigo); }
+.countdownLabel { font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.tournamentDetails { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
+.tournamentDetail { display: flex; justify-content: space-between; align-items: center; }
+.detailLabel { font-size: 0.875rem; color: var(--text-tertiary); }
+.detailValue { font-size: 0.9375rem; font-weight: 700; color: var(--accent-gold); }
+
+/* PRACTICE DEMO */
+.practiceCard {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  cursor: text;
+  transition: all var(--transition-base);
+  position: relative;
+}
+.practiceCard:hover, .practiceCard:focus-within {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-glow);
+}
+.practiceMetrics {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.metric { text-align: center; }
+.metricValue { display: block; font-size: 2rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-indigo); }
+.metricLabel { font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.practiceText {
+  font-family: var(--font-mono);
+  font-size: 1.375rem;
+  line-height: 2;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.5rem;
+  user-select: none;
+}
+.charUpcoming { color: var(--text-tertiary); }
+.charCorrect { color: var(--accent-emerald); }
+.charIncorrect { color: var(--accent-rose); background: rgba(244, 63, 94, 0.15); border-radius: 2px; }
+.charCurrent {
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--accent-indigo);
+  animation: typing-cursor 1s step-end infinite;
+}
+.practiceInput {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+.practiceInput:focus { border-color: var(--accent-indigo); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); outline: none; }
+.resetBtn {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  transition: all var(--transition-fast);
+}
+.resetBtn:hover { color: var(--text-primary); background: var(--glass-bg); }
+
+/* LEADERBOARD */
+.leaderboardTabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.leaderboardTab {
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+.leaderboardTab:hover { color: var(--text-primary); background: var(--glass-bg); }
+.tabActive {
+  background: rgba(99, 102, 241, 0.1) !important;
+  color: var(--accent-indigo) !important;
+  border-color: rgba(99, 102, 241, 0.2);
+}
+.leaderboardTable {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.leaderboardRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+.leaderboardRow:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+}
+.topThree { border-color: rgba(251, 191, 36, 0.15); }
+.rankBadge { min-width: 40px; font-size: 1.25rem; text-align: center; font-weight: 700; }
+.playerInfo { display: flex; align-items: center; gap: 0.75rem; flex: 1; }
+.playerAvatar { font-size: 1.5rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); border-radius: var(--radius-full); }
+.playerName { font-weight: 600; font-size: 0.9375rem; }
+.playerLevel { font-size: 0.75rem; color: var(--text-tertiary); }
+.playerStats { display: flex; align-items: center; gap: 1.5rem; }
+.playerWpm { font-family: var(--font-mono); font-weight: 700; font-size: 1.125rem; color: var(--accent-indigo); }
+.playerWpm span { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 500; }
+.playerAcc { font-size: 0.875rem; color: var(--accent-emerald); font-weight: 600; }
+
+/* FAQ */
+.faqList {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.faqItem {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.faqItem:hover { border-color: var(--border-accent); }
+.faqOpen { border-color: var(--border-accent); background: var(--bg-card-hover); }
+.faqQuestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.125rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+}
+.faqIcon { font-size: 1.25rem; color: var(--text-tertiary); transition: transform var(--transition-fast); }
+.faqAnswer {
+  padding: 0 1.25rem 1.125rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  animation: slide-up 0.3s ease-out;
+}
+
+/* FOOTER */
+.footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding: 4rem 0 2rem;
+}
+.footerGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footerBrand { max-width: 300px; }
+.footerDesc { margin-top: 0.75rem; color: var(--text-tertiary); font-size: 0.9375rem; line-height: 1.7; }
+.footerCol { display: flex; flex-direction: column; gap: 0.625rem; }
+.footerTitle { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.footerCol a { color: var(--text-tertiary); font-size: 0.9375rem; transition: color var(--transition-fast); }
+.footerCol a:hover { color: var(--text-primary); }
+.footerBottom {
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.8125rem;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+.desktopOnly { display: flex; align-items: center; gap: 0.75rem; }
+
+@media (max-width: 1024px) {
+  .benefitsGrid { grid-template-columns: repeat(2, 1fr); }
+  .footerGrid { grid-template-columns: 2fr 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .mobileToggle { display: block; }
+  .desktopOnly { display: none; }
+  .heroTitle { font-size: 2.25rem; }
+  .heroDesc { font-size: 0.9375rem; }
+  .liveStats { gap: 1rem; }
+  .statNum { font-size: 1.375rem; }
+  .statDivider { display: none; }
+  .section { padding: 3.5rem 0; }
+  .sectionTitle { font-size: 1.625rem; }
+  .benefitsGrid { grid-template-columns: 1fr; }
+  .benefitCard { padding: 1.5rem 1.25rem; }
+  .practiceCard { padding: 1.5rem; }
+  .practiceText { font-size: 1.125rem; line-height: 1.8; }
+  .practiceMetrics { gap: 1.5rem; }
+  .metricValue { font-size: 1.5rem; }
+  .leaderboardTable { gap: 0.375rem; }
+  .leaderboardRow { flex-wrap: wrap; padding: 0.875rem 1rem; }
+  .playerStats { width: 100%; justify-content: flex-end; }
+  .faqQuestion { padding: 1rem; font-size: 0.875rem; }
+  .footerGrid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footerBrand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 480px) {
+  .hero { min-height: auto; padding: 7rem 0 3rem; }
+  .heroTitle { font-size: 1.875rem; }
+  .heroBadge { font-size: 0.75rem; }
+  .heroCTA { flex-direction: column; align-items: stretch; }
+  .heroBtn, .heroBtnSec { width: 100%; text-align: center; }
+  .typingDemo { font-size: 0.8125rem; padding: 0.625rem 0.875rem; }
+  .liveStats { flex-direction: column; gap: 0.75rem; }
+  .practiceCard { padding: 1.25rem; }
+  .practiceText { font-size: 1rem; }
+  .practiceMetrics { gap: 1rem; }
+  .countdown { gap: 0.375rem; }
+  .countdownUnit { padding: 0.375rem 0.5rem; min-width: 40px; }
+  .footerGrid { grid-template-columns: 1fr; gap: 1.5rem; }
+}

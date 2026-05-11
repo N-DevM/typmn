@@ -1,0 +1,86 @@
+/* Tournaments Page Styles */
+.page { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); background: var(--bg-secondary); border-right: 1px solid var(--border-subtle); padding: 1.5rem 1rem; position: fixed; top: 0; left: 0; bottom: 0; display: flex; flex-direction: column; }
+.logo { display: flex; align-items: center; gap: 0.5rem; font-size: 1.375rem; font-weight: 800; color: var(--text-primary); text-decoration: none; padding: 0 0.75rem; margin-bottom: 2rem; }
+.nav { display: flex; flex-direction: column; gap: 0.25rem; }
+.navItem { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: var(--radius-md); color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; text-decoration: none; transition: all 150ms ease; }
+.navItem:hover { background: var(--glass-bg); color: var(--text-primary); }
+.navActive { background: rgba(99, 102, 241, 0.1) !important; color: var(--accent-indigo) !important; font-weight: 600; }
+.sidebarFooter { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-subtle); }
+.logoutBtn { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: var(--radius-md); color: var(--text-tertiary); font-size: 0.9375rem; font-weight: 500; width: 100%; background: none; border: none; cursor: pointer; transition: all 150ms ease; }
+.logoutBtn:hover { background: rgba(244, 63, 94, 0.08); color: var(--accent-rose); }
+.main { flex: 1; padding: 2rem 2.5rem 2.5rem 1.5rem; }
+.header { margin-bottom: 2rem; }
+.title { font-size: 1.75rem; font-weight: 800; }
+.subtitle { color: var(--text-tertiary); margin-top: 0.25rem; }
+.alert { padding: 0.75rem 1rem; border-radius: var(--radius-md); background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); color: var(--accent-indigo); font-size: 0.875rem; margin-bottom: 1.5rem; text-align: center; }
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+.tab { padding: 0.5rem 1.25rem; border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 500; color: var(--text-tertiary); border: 1px solid transparent; background: none; cursor: pointer; transition: all 150ms ease; }
+.tab:hover { color: var(--text-primary); background: var(--glass-bg); }
+.tabActive { background: rgba(99, 102, 241, 0.1) !important; color: var(--accent-indigo) !important; border-color: rgba(99, 102, 241, 0.2); }
+.loading { display: flex; justify-content: center; padding: 4rem; }
+.spinner { width: 36px; height: 36px; border: 3px solid var(--border-subtle); border-top-color: var(--accent-indigo); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { text-align: center; padding: 4rem 2rem; color: var(--text-tertiary); }
+.emptyHint { font-size: 0.875rem; margin-top: 0.5rem; }
+.grid { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: flex-start; align-items: flex-start; }
+.card { width: 340px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.5rem; transition: all 250ms ease; position: relative; overflow: hidden; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-primary); }
+.card:hover { border-color: var(--border-accent); transform: translateY(-3px); box-shadow: var(--shadow-glow); }
+.cardTop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+.typeBadge { font-size: 0.6875rem; font-weight: 600; color: var(--accent-indigo); text-transform: uppercase; letter-spacing: 0.04em; }
+.statusBadge { padding: 0.15rem 0.5rem; border-radius: var(--radius-full); font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.status_REGISTRATION_OPEN { background: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); }
+.status_IN_PROGRESS { background: rgba(244, 63, 94, 0.1); color: var(--accent-rose); }
+.status_COMPLETED { background: rgba(107, 107, 128, 0.1); color: var(--text-tertiary); }
+.cardTitle { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+.cardDesc { font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 1rem; line-height: 1.5; }
+.countdown { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.cdUnit { background: var(--bg-tertiary); border-radius: var(--radius-md); padding: 0.375rem 0.625rem; text-align: center; min-width: 44px; }
+.cdNum { display: block; font-size: 1.125rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-indigo); }
+.cdLabel { font-size: 0.5625rem; color: var(--text-tertiary); text-transform: uppercase; }
+.liveBadgeContainer { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; padding: 0.75rem; background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.2); border-radius: var(--radius-md); color: var(--accent-rose); font-weight: 700; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; animation: pulse-border 2s infinite; }
+.liveIndicator { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-rose); animation: blink 1s infinite; box-shadow: 0 0 8px var(--accent-rose); }
+.startingSoonBadge { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: var(--radius-md); color: var(--accent-amber); font-weight: 600; font-size: 0.875rem; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes pulse-border { 0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.2); } 50% { box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.1); } }
+.details { display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.25rem; }
+.detail { display: flex; justify-content: space-between; font-size: 0.875rem; }
+.detail span:first-child { color: var(--text-tertiary); }
+.detail span:last-child { font-weight: 600; }
+.prize { color: var(--accent-gold) !important; }
+.joinBtn { width: 100%; }
+.pendingBtn { width: 100%; padding: 0.75rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.875rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--accent-amber); cursor: default; text-align: center; }
+.verifiedBtn { width: 100%; padding: 0.75rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.875rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--accent-emerald); cursor: default; text-align: center; }
+.reviewBtn { width: 100%; padding: 0.75rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.875rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--accent-cyan); cursor: pointer; text-align: center; transition: all 150ms ease; }
+.reviewBtn:hover { background: rgba(59, 130, 246, 0.15); }
+.waitIllustration { font-size: 3rem; margin-bottom: 1rem; text-align: center; animation: pulse-glow 2s infinite; }
+
+/* Payment Modal */
+.modalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; animation: fade-in 0.2s ease-out; }
+.modal { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 2rem; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; position: relative; animation: scale-in 0.3s ease-out; }
+.modalTitle { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
+.modalDesc { font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 1.5rem; line-height: 1.6; }
+.modalClose { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-tertiary); font-size: 1.25rem; cursor: pointer; padding: 0.25rem; }
+.modalClose:hover { color: var(--text-primary); }
+.paymentInfo { background: var(--bg-tertiary); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.paymentInfoRow { display: flex; justify-content: space-between; font-size: 0.875rem; }
+.paymentInfoRow span:first-child { color: var(--text-tertiary); }
+.paymentInfoRow span:last-child { font-weight: 600; }
+.paymentAccounts { background: var(--bg-tertiary); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; }
+.paymentAccTitle { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.paymentAccItem { font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+.paymentAccItem strong { color: var(--accent-indigo); }
+.formGroup { display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1rem; }
+.formLabel { font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary); }
+.formInput { padding: 0.625rem 0.875rem; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem; transition: border-color 150ms ease; }
+.formInput:focus { border-color: var(--accent-indigo); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+.formSelect { padding: 0.625rem 0.875rem; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem; }
+.fileInput { padding: 0.5rem; background: var(--bg-tertiary); border: 1px solid dashed var(--border-subtle); border-radius: var(--radius-md); font-size: 0.8125rem; color: var(--text-secondary); }
+.submitPayBtn { width: 100%; margin-top: 0.5rem; }
+.formNote { font-size: 0.75rem; color: var(--text-tertiary); text-align: center; margin-top: 0.75rem; line-height: 1.5; }
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scale-in { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+@media (max-width: 768px) { .sidebar { display: none; } .main { padding: 1.5rem; } .grid { grid-template-columns: 1fr; } }
