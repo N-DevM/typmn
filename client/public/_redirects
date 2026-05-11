@@ -1,0 +1,2 @@
+/api/*  http://18.143.145.92/api/:splat  200
+/socket.io/*  http://18.143.145.92/socket.io/:splat  200
