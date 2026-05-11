@@ -9,7 +9,7 @@ dotenv.config({ path: fs.existsSync(serverEnv) ? serverEnv : rootEnv });
 
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
-  API_PORT: parseInt(process.env.API_PORT || '5000', 10),
+  API_PORT: parseInt(process.env.PORT || process.env.API_PORT || '5000', 10),
   SOCKET_PORT: parseInt(process.env.SOCKET_PORT || '5001', 10),
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000',
   DATABASE_URL: process.env.DATABASE_URL || '',
