@@ -1,0 +1,592 @@
+// Prisma Schema for TypmN - Competitive Typing Platform
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// AUTH & USERS
+// ============================================================
+
+enum UserRole {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum UserStatus {
+  ACTIVE
+  BANNED
+  SUSPENDED
+  UNVERIFIED
+}
+
+model User {
+  id                String      @id @default(uuid())
+  email             String      @unique
+  username          String      @unique
+  passwordHash      String
+  role              UserRole    @default(USER)
+  status            UserStatus  @default(UNVERIFIED)
+  avatar            String?
+  country           String?
+  bio               String?
+  emailVerified     Boolean     @default(false)
+  emailVerifyToken  String?
+  resetPasswordToken String?
+  resetPasswordExpiry DateTime?
+  lastLoginAt       DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  // Relations
+  stats             UserStats?
+  practiceSessions  PracticeSession[]
+  achievements      UserAchievement[]
+  tournamentEntries TournamentParticipant[]
+  payments          Payment[]
+  xpLogs            XPLog[]
+  streaks           Streak?
+  notifications     Notification[]
+  antiCheatFlags    AntiCheatFlag[]
+  referralsMade     Referral[]     @relation("referrer")
+  referralsReceived Referral[]     @relation("referred")
+  dailyChallengeResults DailyChallengeResult[]
+  raceEntries       RacePlayer[]
+
+  @@index([email])
+  @@index([username])
+  @@map("users")
+}
+
+model UserStats {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  totalRaces      Int      @default(0)
+  totalPractices  Int      @default(0)
+  bestWpm         Float    @default(0)
+  avgWpm          Float    @default(0)
+  bestAccuracy    Float    @default(0)
+  avgAccuracy     Float    @default(0)
+  totalXp         Int      @default(0)
+  level           Int      @default(1)
+  currentStreak   Int      @default(0)
+  longestStreak   Int      @default(0)
+  tournamentsWon  Int      @default(0)
+  tournamentsPlayed Int    @default(0)
+  globalRank      Int?
+  totalTypingTime Int      @default(0) // seconds
+  totalWordsTyped Int      @default(0)
+  totalCharsTyped Int      @default(0)
+
+  updatedAt       DateTime @updatedAt
+
+  @@map("user_stats")
+}
+
+// ============================================================
+// PRACTICE
+// ============================================================
+
+enum PracticeMode {
+  TIME_15
+  TIME_30
+  TIME_60
+  TIME_120
+  WORDS_10
+  WORDS_25
+  WORDS_50
+  WORDS_100
+  QUOTE
+  PARAGRAPH
+  CODE
+  CUSTOM
+}
+
+model Quote {
+  id          String   @id @default(uuid())
+  text        String
+  source      String?
+  author      String?
+  difficulty  Int      @default(1) // 1-5
+  language    String   @default("english")
+  category    String   @default("general") // general, code, quote, paragraph
+  wordCount   Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  practiceSessions PracticeSession[]
+
+  @@map("quotes")
+}
+
+model PracticeSession {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quoteId     String?
+  quote       Quote?        @relation(fields: [quoteId], references: [id])
+  mode        PracticeMode
+  wpm         Float
+  cpm         Float
+  accuracy    Float
+  errors      Int
+  consistency Float         @default(0)
+  duration    Int           // seconds
+  textLength  Int
+  rawText     String?
+  errorMap    Json?         // { charIndex: wrongChar }
+  wpmHistory  Json?         // [{ time: seconds, wpm: number }]
+  xpEarned    Int           @default(0)
+  createdAt   DateTime      @default(now())
+
+  @@index([userId, createdAt])
+  @@map("practice_sessions")
+}
+
+model DailyChallenge {
+  id          String   @id @default(uuid())
+  date        DateTime @unique @db.Date
+  quoteText   String
+  targetWpm   Int
+  bonusXp     Int      @default(50)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  results     DailyChallengeResult[]
+
+  @@map("daily_challenges")
+}
+
+model DailyChallengeResult {
+  id              String          @id @default(uuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challengeId     String
+  challenge       DailyChallenge  @relation(fields: [challengeId], references: [id])
+  wpm             Float
+  accuracy        Float
+  completed       Boolean         @default(false)
+  xpEarned        Int             @default(0)
+  createdAt       DateTime        @default(now())
+
+  @@unique([userId, challengeId])
+  @@map("daily_challenge_results")
+}
+
+// ============================================================
+// TOURNAMENTS
+// ============================================================
+
+enum TournamentType {
+  ELIMINATION_BRACKET  // Type A
+  TOP_RANKING          // Type B
+}
+
+enum TournamentStatus {
+  DRAFT
+  REGISTRATION_OPEN
+  REGISTRATION_CLOSED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum RoundStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Tournament {
+  id              String            @id @default(uuid())
+  name            String
+  description     String?
+  type            TournamentType
+  status          TournamentStatus  @default(DRAFT)
+  entryFee        Float             @default(0)
+  prizePool       Float             @default(0)
+  currency        String            @default("PKR")
+  maxParticipants Int               @default(100)
+  minParticipants Int               @default(2)
+  scheduledAt     DateTime
+  endScheduledAt  DateTime?
+  registrationEnd DateTime?
+  startedAt       DateTime?
+  endedAt         DateTime?
+  difficulty      String?           @default("medium")
+  
+  // Bracket config (Type A)
+  advanceCount    Int?              // how many advance per round
+  
+  // Ranking config (Type B)
+  topRankCount    Int?              @default(10)
+  prizeTopCount   Int?              @default(3)
+  refundRankStart Int?              @default(4)
+  refundRankEnd   Int?              @default(10)
+
+  // Prize distribution JSON
+  prizeDistribution Json?           // [{ rank: 1, amount: 5000 }, ...]
+  
+  quoteText       String?
+  rules           String?
+  bannerImage     String?
+  
+  createdBy       String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  participants    TournamentParticipant[]
+  rounds          TournamentRound[]
+  matches         TournamentMatch[]
+
+  @@index([status, scheduledAt])
+  @@map("tournaments")
+}
+
+model TournamentRound {
+  id              String       @id @default(uuid())
+  tournamentId    String
+  tournament      Tournament   @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  roundNumber     Int
+  name            String       // "Quarter Final", "Semi Final", etc.
+  status          RoundStatus  @default(PENDING)
+  quoteText       String?
+  startedAt       DateTime?
+  endedAt         DateTime?
+  advanceCount    Int?
+  createdAt       DateTime     @default(now())
+
+  matches         TournamentMatch[]
+
+  @@unique([tournamentId, roundNumber])
+  @@map("tournament_rounds")
+}
+
+model TournamentParticipant {
+  id              String     @id @default(uuid())
+  tournamentId    String
+  tournament      Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paymentVerified Boolean    @default(false)
+  isActive        Boolean    @default(true) // false = eliminated
+  finalRank       Int?
+  totalWpm        Float?
+  totalAccuracy   Float?
+  prizeAmount     Float?
+  refunded        Boolean    @default(false)
+  registeredAt    DateTime   @default(now())
+
+  payment         Payment?
+  matches         TournamentMatch[]
+
+  @@unique([tournamentId, userId])
+  @@index([tournamentId, paymentVerified])
+  @@map("tournament_participants")
+}
+
+model TournamentMatch {
+  id              String              @id @default(uuid())
+  tournamentId    String
+  tournament      Tournament          @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  roundId         String?
+  round           TournamentRound?    @relation(fields: [roundId], references: [id])
+  participantId   String
+  participant     TournamentParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  wpm             Float
+  accuracy        Float
+  errors          Int                 @default(0)
+  duration        Int                 @default(0) // seconds
+  position        Int?                // rank in this round
+  advanced        Boolean             @default(false)
+  progress        Float               @default(0)
+  isFinished      Boolean             @default(false)
+  completedAt     DateTime?
+  createdAt       DateTime            @default(now())
+
+  @@unique([roundId, participantId])
+  @@index([tournamentId, roundId])
+  @@map("tournament_matches")
+}
+
+// ============================================================
+// PAYMENTS
+// ============================================================
+
+enum PaymentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  JAZZCASH
+  EASYPAISA
+  BANK_TRANSFER
+  OTHER
+}
+
+model Payment {
+  id                  String        @id @default(uuid())
+  userId              String
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participantId       String?       @unique
+  participant         TournamentParticipant? @relation(fields: [participantId], references: [id])
+  amount              Float
+  currency            String        @default("PKR")
+  method              PaymentMethod
+  transactionId       String?
+  senderName          String?
+  senderAccount       String?
+  screenshotUrl       String?
+  status              PaymentStatus @default(PENDING)
+  adminNotes          String?
+  verifiedBy          String?
+  verifiedAt          DateTime?
+  rejectionReason     String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@index([status])
+  @@index([userId])
+  @@map("payments")
+}
+
+// ============================================================
+// GAMIFICATION
+// ============================================================
+
+model Badge {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  icon        String
+  category    String   // speed, accuracy, streak, tournament, social
+  requirement Json     // { type: "wpm_best", value: 100 }
+  xpReward    Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  userAchievements UserAchievement[]
+
+  @@map("badges")
+}
+
+model UserAchievement {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id])
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@map("user_achievements")
+}
+
+model XPLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  source    String   // practice, tournament, daily_challenge, streak, badge, referral
+  details   String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("xp_logs")
+}
+
+model Streak {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak Int      @default(0)
+  longestStreak Int      @default(0)
+  lastActiveDate DateTime? @db.Date
+  updatedAt     DateTime @updatedAt
+
+  @@map("streaks")
+}
+
+// ============================================================
+// SOCIAL & GROWTH
+// ============================================================
+
+model Referral {
+  id          String   @id @default(uuid())
+  referrerId  String
+  referrer    User     @relation("referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referredId  String
+  referred    User     @relation("referred", fields: [referredId], references: [id], onDelete: Cascade)
+  code        String
+  xpRewarded  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@unique([referrerId, referredId])
+  @@map("referrals")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   // tournament, achievement, system, social
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+// ============================================================
+// ANTI-CHEAT
+// ============================================================
+
+enum FlagSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model AntiCheatFlag {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String        // suspicious_wpm, tab_switch, copy_paste, accuracy_anomaly
+  severity    FlagSeverity  @default(LOW)
+  details     Json?
+  sessionId   String?       // practice or tournament session
+  reviewed    Boolean       @default(false)
+  reviewedBy  String?
+  reviewNotes String?
+  createdAt   DateTime      @default(now())
+
+  @@index([userId, reviewed])
+  @@map("anti_cheat_flags")
+}
+
+// ============================================================
+// ADMIN & CONTENT
+// ============================================================
+
+model Announcement {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  type      String   @default("info") // info, warning, tournament, update
+  isActive  Boolean  @default(true)
+  isPinned  Boolean  @default(false)
+  expiresAt DateTime?
+  createdBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("announcements")
+}
+
+model AdminLog {
+  id        String   @id @default(uuid())
+  adminId   String
+  action    String
+  target    String?  // userId, tournamentId, etc.
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([adminId, createdAt])
+  @@map("admin_logs")
+}
+
+model PlatformSettings {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("platform_settings")
+}
+
+// ============================================================
+// MULTIPLAYER RACING
+// ============================================================
+
+enum RaceType {
+  PUBLIC
+  PRIVATE
+}
+
+enum RaceStatus {
+  WAITING
+  COUNTDOWN
+  RACING
+  FINISHED
+  CANCELLED
+}
+
+model Race {
+  id           String     @id @default(uuid())
+  code         String?    @unique
+  type         RaceType   @default(PUBLIC)
+  status       RaceStatus @default(WAITING)
+  quoteId      String?
+  quoteText    String
+  maxPlayers   Int        @default(5)
+  createdAt    DateTime   @default(now())
+  startedAt    DateTime?
+  finishedAt   DateTime?
+  players      RacePlayer[]
+
+  @@index([status])
+  @@index([code])
+  @@map("races")
+}
+
+model RacePlayer {
+  id         String   @id @default(uuid())
+  raceId     String
+  race       Race     @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  username   String
+  isGhost    Boolean  @default(false)
+  wpm        Float    @default(0)
+  accuracy   Float    @default(0)
+  progress   Float    @default(0)
+  finishTime Int?     // ms to complete
+  position   Int?
+  createdAt  DateTime @default(now())
+
+  @@index([raceId])
+  @@map("race_players")
+}
+
+model GhostReplay {
+  id        String   @id @default(uuid())
+  userId    String
+  username  String
+  wpm       Float
+  accuracy  Float
+  duration  Int      // seconds
+  timeline  Json     // [{ms, charIndex}, ...]
+  quoteText String
+  createdAt DateTime @default(now())
+
+  @@index([wpm])
+  @@map("ghost_replays")
+}

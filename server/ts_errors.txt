@@ -1,0 +1,6 @@
+node_modules/@prisma/client/runtime/library.d.ts(73,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+node_modules/@prisma/client/runtime/library.d.ts(401,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+node_modules/@prisma/client/runtime/library.d.ts(2037,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+prisma/seed.ts(2,8): error TS1192: Module '"/home/najeeb_ullah/myLab/Semesters/TypmN/server/node_modules/@types/bcryptjs/index"' has no default export.
+prisma/seed.ts(125,30): error TS2353: Object literal may only specify known properties, and 'current' does not exist in type '(Without<StreakCreateWithoutUserInput, StreakUncheckedCreateWithoutUserInput> & StreakUncheckedCreateWithoutUserInput) | (Without<...> & StreakCreateWithoutUserInput)'.
+prisma/seed.ts(154,11): error TS2322: Type '"text"' is not assignable to type 'PracticeMode'.
