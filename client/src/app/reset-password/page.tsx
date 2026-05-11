@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import styles from "../auth.module.css";
 import { api } from "@/lib/api";
@@ -89,7 +89,9 @@ export default function ResetPasswordPage() {
         <a href="/" className={styles.authLogo}><span>⌨</span> TypmN</a>
         <h1 className={styles.authTitle}>Set New Password</h1>
         <p className={styles.authSubtitle}>Choose a strong password for your account</p>
-        <ResetPasswordForm />
+        <Suspense fallback={<div style={{ textAlign: "center", padding: "2rem" }}>Loading...</div>}>
+          <ResetPasswordForm />
+        </Suspense>
         <p className={styles.authSwitch}>
           Remember your password? <a href="/login">Log in</a>
         </p>
